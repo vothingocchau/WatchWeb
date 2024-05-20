@@ -1,36 +1,33 @@
-using Microsoft.EntityFrameworkCore;
+﻿using WatchWeb.Admin;
+using WatchWeb.Model;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<WatchWeb.Model.EFContext.DataContext>(options =>
+public class Program
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
-});
 
-var app = builder.Build();
+    public static Task Main(string[] args)
+    {
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webHostBuilder =>
+            {
+                _ = webHostBuilder
+                    .UseStartup<Startup>();
+            })
+            .Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+        using (var scope = host.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                _ = SeedData.Initialize(services);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred seeding the DB.");
+            }
+        }
+
+        return host.RunAsync();
+    }
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();

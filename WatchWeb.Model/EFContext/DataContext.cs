@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WatchWeb.Model.Entities;
 
 namespace WatchWeb.Model.EFContext
 {
-    public partial class DataContext:DbContext
+    public partial class DataContext : DbContext
     {
-        public DbSet<Address> Address {  get; set; }
+        public DbSet<Address> Address { get; set; }
         public DbSet<Brand> Brand { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Document> Document { get; set; }
@@ -23,7 +18,7 @@ namespace WatchWeb.Model.EFContext
         public DbSet<SubCategory> SubCategory { get; set; }
         public DbSet<UserAccount> UserAccount { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
-        public DbSet<Warranty> Warranty { get; set;}
+        public DbSet<Warranty> Warranty { get; set; }
 
 
         public DataContext() { }
@@ -32,6 +27,10 @@ namespace WatchWeb.Model.EFContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserRole>().HasKey(x => new { x.RoleId, x.UserAccountId });
+            modelBuilder.Entity<RolePermission>().HasKey(x => new { x.RoleId, x.PermissionId });
+        }
     }
 }

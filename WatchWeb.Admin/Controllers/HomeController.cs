@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WatchWeb.Admin.MiddleWare;
 using WatchWeb.Admin.Models;
+using WatchWeb.Model;
 
 namespace WatchWeb.Admin.Controllers
 {
@@ -13,6 +15,7 @@ namespace WatchWeb.Admin.Controllers
             _logger = logger;
         }
 
+        [AuthPermission(PermissionSeed.Admin)]
         public IActionResult Index()
         {
             return View();

@@ -12,9 +12,11 @@ namespace WatchWeb.Model.Entities
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string PasswordResetToken { get; set; }
-        public int Active {  get; set; }
+        public string? PasswordResetToken { get; set; }
+        public bool Active {  get; set; }
         public int Gender { get; set; }
         public string Phone { get; set; }
+
+        public virtual ICollection<UserRole> UserRole { get; set; }
     }
 }
