@@ -1,0 +1,147 @@
+﻿@model WatchWeb.Service.Models.Response.PaginationCategoryReponse
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Quản lý danh mục</h6>
+        <a href="category/create" class="btn btn-primary btn-icon-split">
+            <span class="text">Tạo mới</span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            Mã danh mục
+                        </th>
+                        <th>
+                            Tên
+                        </th>
+                        <th>
+                            Danh mục cha (Tên - Mã danh mục)
+                        </th>
+                        <th style="text-align:center">
+                            Trạng thái
+                        </th>
+                        <th>
+                            Hình ảnh
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="align-middle">
+                                @if (item.Parent != null)
+                                {
+                                    <span>
+                                        @Html.DisplayFor(modelItem => item.Parent.Name)
+                                        - @Html.DisplayFor(modelItem => item.Parent.Id)
+                                    </span>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @if (item.Status == 0)
+                                {
+                                    <span style="cursor:default" class="btn btn-danger btn-icon-split text p-2">Ngưng Hoạt Động</span>
+                                }
+                                else
+                                {
+                                    <span style="cursor:default" class="btn btn-success btn-icon-split text p-2">Hoạt Động</span>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @if (string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="~/img/image-default.png" width="100px" height="100px" />
+                                }
+                                else
+                                {
+                                    <img src=" @item.ImageUrl" width="100px" height="100px" />
+                                }
+
+                            </td>
+                            <td class="align-middle">
+                                <div style="d-flex">
+                                    @Html.ActionLink("Chi Tiết", "detail", "category", new { id = item.Id }
+                                             , new { @class = "btn btn-info btn-icon-split text p-2" })
+                                    @Html.ActionLink("Chỉnh Sửa", "update", "category", new { id = item.Id }
+                                             , new { @class = "btn btn-warning btn-icon-split text p-2" })
+                                    @if (item.Status == 1)
+                                    {
+                                        <button type="button" data-id="@item.Id" data-status="@item.Status" data-action="active" data-controller="category" class="btn btn-danger btn-icon-split text p-2 launchModal" data-bs-toggle="modal" data-bs-target="#myModal">
+                                            Ngưng hoạt động
+                                        </button>
+
+                                    }
+                                    else
+                                    {
+                                        <button type="button" data-id="@item.Id" data-status="@item.Status" data-action="active" data-controller="category" class="btn btn-success btn-icon-split text p-2 launchModal" data-bs-toggle="modal" data-bs-target="#myModal">
+                                            Hoạt động
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        @* @await Html.PartialAsync("_parttialActiveModal", new ViewDataDictionary(ViewData) { { "id", item.Id }, { "status", item.Status }, { "action", "active" }, { "controller", "category" } }) *@
+                    }
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation" style="float: right;">
+                <ul class="pagination">
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" href="?pageIndex=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+            <div id="modalContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Open modal when the page is loaded
+        $('.launchModal').click(function () {        
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+
+            $.ajax({
+                url: '/' + "category" + '/' + "activemodal",
+                type: 'GET',
+                data: { id: id, status: status},
+                success: function (data) {
+                    $('#modalContainer').html(data);
+                    $('#myModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", xhr.status, xhr.statusText);
+                    console.error("Error message:", error);
+                }
+            });
+        });
+
+        // Close modal when the close button is clicked
+        $('#closeModal').click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
+

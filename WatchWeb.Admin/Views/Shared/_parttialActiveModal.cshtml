@@ -1,0 +1,32 @@
+﻿@{
+    var id = ViewData["id"] as string;
+    var status = ViewData["status"] as string;
+    var action = ViewData["action"] as string;
+    var controller = ViewData["controller"] as string;
+}
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Bạn có chắc @if (Convert.ToInt32(@status) == 1)
+                    {
+                        <span>Ngưng Hoạt Động </span>
+                    }
+                    else
+                    {
+                        <span>Mở Hoạt Động </span>
+                    }
+                </h5>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="closeModal" type="button" class="btn btn-secondary" data-bs-dismiss="launchModal">Đóng</button>
+                @Html.ActionLink("Xác nhận", @action, @controller, new { id = Convert.ToInt32(@id) }
+                         , new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+</div>
+

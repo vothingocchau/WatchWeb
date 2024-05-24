@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WatchWeb.Model.Entities;
 using WatchWeb.Service.Models.Dto;
+using WatchWeb.Service.Models.Request.Category;
 using WatchWeb.Service.Models.Request.Roles;
 
 namespace WatchWeb.Service.Models.Mapper
@@ -19,6 +20,12 @@ namespace WatchWeb.Service.Models.Mapper
             CreateMap<Role, RoleSimpleDto>();
             CreateMap<Role, RoleDetailDto>();
             CreateMap<RoleDetailDto, UpdateRoleRequest>();
+            CreateMap<Category, CategorySimpleDto>();
+            CreateMap<Category, CategoryParent>();
+            CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<UpdateCategoryRequest, Category>();
+            CreateMap<Category, UpdateCategoryRequest>();
+            CreateMap<Document, DocumentOutputDto>();
         }
     }
 }

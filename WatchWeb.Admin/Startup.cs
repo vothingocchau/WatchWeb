@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WatchWeb.Service.IServices;
 using WatchWeb.Service.Models.Mapper;
 using WatchWeb.Service.Services;
+using WatchWeb.Service.Settings;
 
 namespace WatchWeb.Admin
 {
@@ -46,9 +48,14 @@ namespace WatchWeb.Admin
                 options.AccessDeniedPath = "/AccessDenied";
                 options.ReturnUrlParameter = "/";
             });
-
+            services.Configure<CloundinarySetting>(Configuration.GetSection(nameof(CloundinarySetting)));
+            services.AddSingleton<ICloundinarySetting>(sp =>
+                sp.GetRequiredService<IOptions<CloundinarySetting>>().Value);
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IUploadService, UploadService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

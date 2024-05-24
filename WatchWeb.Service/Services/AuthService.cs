@@ -24,18 +24,27 @@ namespace WatchWeb.Service.Services
 
         public async Task<BaseResponse<AdminLoginDto>> LoginAdmin(LoginRequest model)
         {
-
-            var user = await _dataContext.UserAccount.Include(z => z.UserRole)
-                                        .Where(x => x.Name == model.UserName && x.Active &&
-                                                x.Password == GetMD5(model.Password)).FirstOrDefaultAsync();
-
-            var output = _mapper.Map<AdminLoginDto>(user);
-            if (user == null)
+            try
             {
-                return new BaseResponse<AdminLoginDto>().Failed(MessageResponseConstant.LOGIN_FAILED, output);
+                var user = await _dataContext.UserAccount.Include(z => z.UserRole)
+                                       .Where(x => x.Name == model.UserName && x.Active &&
+                                               x.Password == GetMD5(model.Password)).FirstOrDefaultAsync();
+
+                var output = _mapper.Map<AdminLoginDto>(user);
+                if (user == null)
+                {
+                    return new BaseResponse<AdminLoginDto>().Failed(MessageResponseConstant.LOGIN_FAILED, output);
+                }
+
+                return new BaseResponse<AdminLoginDto>().Success(MessageResponseConstant.LOGIN_SUCCESSFULLY, output);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
 
-            return new BaseResponse<AdminLoginDto>().Success(MessageResponseConstant.LOGIN_SUCCESSFULLY, output);
+           
         }
 
         public Task Logout()

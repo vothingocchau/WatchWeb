@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WatchWeb.Model.Entities
+﻿namespace WatchWeb.Service.Models.Request.Products
 {
-    public class Product
+    public class CreateProductRequest
     {
-        public int Id { get; set; }
-        public int CategoryId {  get; set; }
+        public List<int> CategoryId { get; set; }
         public string Name { get; set; }
         public float UnitPrice { get; set; }
         public int CreateUser { get; set; }
@@ -18,7 +10,7 @@ namespace WatchWeb.Model.Entities
         public string MadeIn { get; set; }
         public string Description { get; set; }
         public string Diameter { get; set; }
-        public string Crystal {  get; set; }
+        public string Crystal { get; set; }
         public string WaterProof { get; set; }
         public string Machine { get; set; }
         public string Albert { get; set; }

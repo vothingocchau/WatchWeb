@@ -6,5 +6,8 @@
         public const string LOGIN_SUCCESSFULLY = "Đăng nhập thành công";
         public const string SUCCESSFULLY = "Thành công";
         public const string NOTFOUND = "Không tìm thấy dữ liệu";
+        public const string ERR_MSG_EMPTY_DATA = "Dữ liệu hình ảnh bị trống";
+        public const string ERR_MSG_INVALID_BASE64_STRING = "Dữ liệu không phải base64";
+        public const string ERR_MSG_UPLOAD_FILE_SIZE_OVER_MAXIMUM = "Không thể upload kích thước hình quá 3MB";
     }
 }
