@@ -3,8 +3,11 @@
     public class ProductSimpleDto
     {
         public int Id { get; set; }
-        public List<ProductSimpleDto> Categories {  get; set; }
         public string Name { get; set; }
-        public string UnitPrice { get; set; }
+        public int CreateUser { get; set; }
+        public DateTime CreateDate { get; set; }
+        public string ImageUrl { get; set; }
+        public float UnitPrice { get; set; }
+        public int Status { get; set; }
     }
 }

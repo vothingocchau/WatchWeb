@@ -14,6 +14,7 @@ namespace WatchWeb.Service.IServices
         public Task<List<CategoryParent>> GetListForCreateUpdate();
         public Task<BaseResponse<UpdateCategoryRequest>> GetDetailForUpdateAsync(int id);
         public Task<BaseResponse<string>> Active(int id); 
-        public Task<BaseResponse<string>> Delete(int id); 
+        public Task<BaseResponse<string>> Delete(int id);
+        Task<List<CategorySimpleDto>> GetListForCreateUpdateProduct();
     }
 }

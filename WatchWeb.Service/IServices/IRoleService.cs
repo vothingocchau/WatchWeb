@@ -11,5 +11,6 @@ namespace WatchWeb.Service.IServices
         public Task<BaseResponse<string>> UpdateAsync(UpdateRoleRequest request);
         public Task<BaseResponse<PageResponse<List<RoleSimpleDto>>>> GetAllAsync(BasePaginationRequest request);
         public Task<BaseResponse<RoleDetailDto>> GetDetailAsync(int id);
+        public Task<List<RoleSimpleDto>> GetAllForCreateUser();
     }
 }

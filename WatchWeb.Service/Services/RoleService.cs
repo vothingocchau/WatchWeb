@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using WatchWeb.Common.Constant;
 using WatchWeb.Model.EFContext;
@@ -68,6 +69,14 @@ namespace WatchWeb.Service.Services
                 throw;
             }
 
+        }
+
+        public async Task<List<RoleSimpleDto>> GetAllForCreateUser()
+        {
+            var query = _dataContext.Role.Where(_ => true);
+            var outputs = _mapper.Map<List<RoleSimpleDto>>(await query.ToListAsync());
+
+            return outputs;
         }
 
         public async Task<BaseResponse<RoleDetailDto>> GetDetailAsync(int id)

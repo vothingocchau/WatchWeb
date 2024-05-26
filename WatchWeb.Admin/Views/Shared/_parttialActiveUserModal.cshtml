@@ -9,7 +9,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
-                    Bạn có chắc @if (Convert.ToInt32(@status) == 1)
+                    Bạn có chắc @if (Convert.ToBoolean(@status) == true)
                     {
                         <span>Ngưng Hoạt Động </span>
                     }
@@ -46,7 +46,7 @@
 
     function activeCategoryById(id) {
         $.ajax({
-            url: 'category/active',
+            url: 'user/active',
             type: 'POST',
             dataType: 'json',
             data: { id: id },

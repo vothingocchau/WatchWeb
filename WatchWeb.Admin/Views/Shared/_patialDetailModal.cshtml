@@ -1,0 +1,54 @@
+﻿@model WatchWeb.Service.Models.Dto.CategorySimpleDto
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Thông tin chi tiết danh mục
+                </h5>
+            </div>
+            <div class="modal-body d-flex">
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label asp-for="Id" class="control-label">Mã danh mục: @Model.Id</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Tên danh mục: @Model.Name</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Status" class="control-label">Trạng thái: @Model.Status</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Parent" class="control-label">
+                                Danh mục cha: @if (Model.Parent != null)
+                                {
+                                    @Model.Parent.Name
+                                }
+                                else
+                                {
+                                    <span>Không có </span>
+                                }
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div style="margin: -11px 24px 24px 24px;">
+                    <img id="previewImage" class="img-thumbnail" src="@Model.ImageUrl" asp-append-version="true" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: block;" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeModal" data-bs-dismiss="launchModal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.closeModal').click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>

@@ -194,7 +194,7 @@ namespace WatchWeb.Service.Services
         public async Task<BaseResponse<string>> RemoveOldImageAsync(int refId, string type)
         {
             var result = new BaseResponse<string>();
-            var image = await _dataContext.Document.Where(x => x.ReferenceId == refId && x.Type == type).FirstOrDefaultAsync();
+            var image = await _dataContext.Document.Where(x => x.ReferenceId == refId && x.Type == type && x.Status == 1).FirstOrDefaultAsync();
             if (image == null) return result.Failed(MessageResponseConstant.NOTFOUND, string.Empty);
             image.Status = 0;
             _dataContext.Document.Update(image);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using WatchWeb.Common.Helper;
 using WatchWeb.Service.IServices;
+using WatchWeb.Service.Models.Dto;
 using WatchWeb.Service.Models.Request;
 using WatchWeb.Service.Models.Request.Category;
 
@@ -34,6 +35,7 @@ namespace WatchWeb.Admin.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateCategoryRequest request, IFormFile image)
         {
+          
             if (image != null && image.Length > 0)
                 request.ImageUrl = ImageHelper.ConvertImageToBase64(image);
             await _categoryService.CreateAsync(request);
@@ -64,10 +66,21 @@ namespace WatchWeb.Admin.Controllers
             if (result.IsSuccess)
             {
                 ViewData["Success"] = result.Message;
-                return LocalRedirect("/category");
+                return Json(result);
             }
-            ViewData["NotFound"] = result.Message;
-            return LocalRedirect("/category");
+            return Json(result);
+        }
+
+        [Route("delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _categoryService.Delete(id);
+            if (result.IsSuccess)
+            {
+                ViewData["Success"] = result.Message;
+                return Json(result);
+            }
+            return Json(result);
         }
 
         [HttpGet("detail")]
@@ -78,13 +91,31 @@ namespace WatchWeb.Admin.Controllers
         }
 
         [HttpGet("activemodal")]
-        public async Task<IActionResult> ActivePartial(string id, string status)
+        public IActionResult ActivePartial(string id, string status)
         {
-            ViewData["id"] = id; 
-            ViewData["status"] = status; 
-            ViewData["action"] = "active"; 
+            ViewData["id"] = id;
+            ViewData["status"] = status;
+            ViewData["action"] = "active";
             ViewData["controller"] = "category";
             return PartialView("_parttialActiveModal");
+        }
+
+
+        [HttpGet("deletemodal")]
+        public IActionResult DeletePartial(string id, string name)
+        {
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["action"] = "delete";
+            ViewData["controller"] = "category";
+            return PartialView("_partialDeleteModal");
+        }
+
+        [HttpGet("detailmodal")]
+        public async Task<IActionResult> DetailPartial(string id)
+        {
+            var req = await _categoryService.GetAsync(Convert.ToInt32(id));
+            return PartialView("_patialDetailModal", req.Data);
         }
     }
 }

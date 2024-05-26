@@ -10,7 +10,6 @@ namespace WatchWeb.Model.Entities
     public class Product
     {
         public int Id { get; set; }
-        public int CategoryId {  get; set; }
         public string Name { get; set; }
         public float UnitPrice { get; set; }
         public int CreateUser { get; set; }
@@ -23,5 +22,6 @@ namespace WatchWeb.Model.Entities
         public string Machine { get; set; }
         public string Albert { get; set; }
         public int Status { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace WatchWeb.Service.Services
 
         public async Task<PaginationCategoryReponse> GetAllAsync(BasePaginationRequest request)
         {
-            var query = _dataContext.Category.Where(_ => true);
+            var query = _dataContext.Category.Where(x => !x.IsDeleted);
 
             if (!string.IsNullOrEmpty(request.KeyWord))
                 query = query.Where(x => x.Name.Contains(request.KeyWord));
@@ -72,14 +72,20 @@ namespace WatchWeb.Service.Services
 
         public async Task<List<CategoryParent>> GetListForCreateUpdate()
         {
-            var output = await _dataContext.Category.Where(_ => true).ToListAsync();
+            var output = await _dataContext.Category.Where(x => !x.IsDeleted).ToListAsync();
             return _mapper.Map<List<CategoryParent>>(output);
+        }
+
+        public async Task<List<CategorySimpleDto>> GetListForCreateUpdateProduct()
+        {
+            var output = await _dataContext.Category.Where(x => !x.IsDeleted).ToListAsync();
+            return _mapper.Map<List<CategorySimpleDto>>(output);
         }
 
         public async Task<BaseResponse<UpdateCategoryRequest>> GetDetailForUpdateAsync(int id)
         {
             var result = new BaseResponse<UpdateCategoryRequest>();
-            var query = await _dataContext.Category.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = await _dataContext.Category.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
             if (query == null)
                 return result.Failed(MessageResponseConstant.NOTFOUND, new UpdateCategoryRequest());
 
@@ -95,11 +101,15 @@ namespace WatchWeb.Service.Services
 
         public async Task<BaseResponse<CategorySimpleDto>> GetAsync(int id)
         {
-            var query = await _dataContext.Category.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = await _dataContext.Category.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
             if (query == null)
                 return new BaseResponse<CategorySimpleDto>().Failed(MessageResponseConstant.NOTFOUND, null);
 
             var output = _mapper.Map<CategorySimpleDto>(query);
+            await _uploadService.AppendFileUrl<CategorySimpleDto, DocumentOutputDto>(DocumentTypeConstant.CATEGORY,
+             x => x.Id,
+             (x, file) => x.ImageUrl = file?.Url,
+             output);
 
             return new BaseResponse<CategorySimpleDto>().Success(MessageResponseConstant.SUCCESSFULLY, output);
         }
@@ -133,7 +143,7 @@ namespace WatchWeb.Service.Services
         public async Task<BaseResponse<string>> Active(int id)
         {
             var result = new BaseResponse<string>();
-            var query = await _dataContext.Category.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var query = await _dataContext.Category.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
             if (query == null)
                 return result.Failed(MessageResponseConstant.NOTFOUND, string.Empty);
 
@@ -146,9 +156,18 @@ namespace WatchWeb.Service.Services
             return result.Success(MessageResponseConstant.SUCCESSFULLY, string.Empty);
         }
 
-        public Task<BaseResponse<string>> Delete(int id)
+        public async Task<BaseResponse<string>> Delete(int id)
         {
-            throw new NotImplementedException();
+            var result = new BaseResponse<string>();
+            var query = await _dataContext.Category.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync();
+            if (query == null)
+                return result.Failed(MessageResponseConstant.NOTFOUND, string.Empty);
+
+            query.IsDeleted = true;
+            _dataContext.Category.Update(query);
+            await _dataContext.SaveChangesAsync();
+
+            return result.Success(MessageResponseConstant.SUCCESSFULLY, string.Empty);
         }
     }
 }

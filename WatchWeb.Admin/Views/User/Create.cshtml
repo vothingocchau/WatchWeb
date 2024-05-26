@@ -1,0 +1,101 @@
+﻿@using WatchWeb.Service.Models.Request.Users
+@model CreateUserRequest
+
+@{
+    ViewData["Title"] = "Tạo người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Tạo danh mục mới</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="create" asp-controller="user" method="post" class="d-flex" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div style="flex:0.5; padding-right:65px">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Tên người dùng</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label">Tên tài khoản</label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label">Mật khẩu</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label">Số điện thoại</label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="Active" asp-items="@(new SelectList (Model.UserStatus, "Id", "DislayName"))">
+                        <option value="">-- Trạng Thái --</option>
+                    </select>
+                </div>
+                @*                 <div class="form-group">
+                <select class="custom-select selectpicker" asp-for="UserRole" asp-items="@(new SelectList (Model.UserRoles, "Id", "Name"))" multiple data-live-search="true">
+                <option value="">-- Quyền --</option>
+                </select>
+                </div> *@
+                <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:335px;">
+                    @foreach (var item in Model.UserRoles)
+                    {
+                        <div style="width:80px">
+                            <input type="checkbox" name="ListRoleIds" value="@item.Id"
+                            @(Model.ListRoleIds != null && Model.ListRoleIds.Contains(item.Id) ? "checked" : "") />
+                            <label>@item.Name</label>
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                </div>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label for="imageInput">Choose Image:</label>
+                <input type="file" class="form-control-file" id="imageInput" name="image" accept="image/*">
+                <img id="previewImage" src="#" style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Quay lại danh sách</a>
+</div>
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="~/js/sb-admin-2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#imageInput').change(function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+    });
+    var message = '@ViewData["result"]';
+    if (message) {
+        toastr.error(message, 'Thông báo', { positionClass: 'toast-top-right' });
+    }
+</script>

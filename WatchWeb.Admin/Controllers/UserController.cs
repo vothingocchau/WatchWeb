@@ -3,87 +3,87 @@ using WatchWeb.Common.Constant;
 using WatchWeb.Common.Helper;
 using WatchWeb.Service.IServices;
 using WatchWeb.Service.Models.Request;
-using WatchWeb.Service.Models.Request.Products;
+using WatchWeb.Service.Models.Request.Users;
 
 namespace WatchWeb.Admin.Controllers
 {
-    [Route("product")]
-    public class ProductController : Controller
+    [Route("user")]
+    public class UserController : Controller
     {
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
-
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
+        public UserController(IUserService userService, IRoleService roleService)
         {
-            _productService = productService;
-            _categoryService = categoryService;
+            _userService = userService;
+            _roleService = roleService;
         }
+
         public async Task<IActionResult> Index(BasePaginationRequest request)
         {
-            var product = await _productService.GetAllAsync(request);
-            return View(product);
+            var user = await _userService.GetAllAsync(request);
+            return View(user);
         }
 
         [HttpGet("create")]
         public async Task<IActionResult> Create()
         {
-            var req = new CreateProductRequest();
-            req.Categories = await _categoryService.GetListForCreateUpdateProduct();
+            var req = new CreateUserRequest();
+            req.UserRoles = await _roleService.GetAllForCreateUser();
             return View(req);
         }
 
         [HttpPost("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateProductRequest request, IFormFile image)
+        public async Task<IActionResult> Create(CreateUserRequest request, IFormFile image)
         {
             if (ModelState.IsValid)
             {
                 if (image != null && image.Length > 0)
                     request.ImageUrl = ImageHelper.ConvertImageToBase64(image);
-                var result = await _productService.CreateAsync(request);
-                result.Data.Categories = await _categoryService.GetListForCreateUpdateProduct();
+                var result = await _userService.CreateAsync(request);
+                result.Data.UserRoles = await _roleService.GetAllForCreateUser();
                 ViewData[ViewDataConstant.RESULT] = result.Message;
                 if (result.IsSuccess)
-                    return LocalRedirect("/product");
+                    return LocalRedirect("/user");
                 return View(result.Data);
             }
-            var req = new CreateProductRequest();
-            req.Categories = await _categoryService.GetListForCreateUpdateProduct();
+            var req = new CreateUserRequest();
+            req.UserRoles = await _roleService.GetAllForCreateUser();
             return View(req);
         }
 
         [HttpGet("update")]
         public async Task<IActionResult> Update(int id)
         {
-            var product = await _productService.GetDetailForUpdateAsync(id);
-            product.Data.Categories = await _categoryService.GetListForCreateUpdateProduct();
-            return View(product.Data);
+            var user = await _userService.GetDetailForUpdateAsync(id);
+            user.Data.UserRoles = await _roleService.GetAllForCreateUser();
+            return View(user.Data);
         }
 
         [HttpPost("update")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(UpdateProductRequest request, IFormFile image)
+        public async Task<IActionResult> Update(UpdateUserRequest request, IFormFile image)
         {
             if (ModelState.IsValid)
             {
                 if (image != null && image.Length > 0)
                     request.ImageUrl = ImageHelper.ConvertImageToBase64(image);
-                var result = await _productService.UpdateAsync(request);
-                result.Data.Categories = await _categoryService.GetListForCreateUpdateProduct();
+                var result = await _userService.UpdateAsync(request);
+                result.Data.UserRoles = await _roleService.GetAllForCreateUser();
                 ViewData[ViewDataConstant.RESULT] = result.Message;
                 if (result.IsSuccess)
-                    return LocalRedirect("/product");
+                    return LocalRedirect("/user");
                 return View(result.Data);
             }
-            var req = new UpdateProductRequest();
-            req.Categories = await _categoryService.GetListForCreateUpdateProduct();
+            var req = new UpdateUserRequest();
+            req.UserRoles = await _roleService.GetAllForCreateUser();
             return View(req);
         }
 
         [Route("active")]
         public async Task<IActionResult> Active(int id)
         {
-            var result = await _productService.Active(id);
+            var result = await _userService.Active(id);
             if (result.IsSuccess)
             {
                 ViewData["Success"] = result.Message;
@@ -95,7 +95,7 @@ namespace WatchWeb.Admin.Controllers
         [Route("delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _productService.Delete(id);
+            var result = await _userService.Delete(id);
             if (result.IsSuccess)
             {
                 ViewData["Success"] = result.Message;
@@ -107,8 +107,8 @@ namespace WatchWeb.Admin.Controllers
         [HttpGet("detail")]
         public async Task<IActionResult> GetDetail(int id)
         {
-            var product = await _productService.GetDetailAsync(id);
-            return View(product);
+            var category = await _userService.GetAsync(id);
+            return View(category);
         }
 
         [HttpGet("activemodal")]
@@ -135,7 +135,7 @@ namespace WatchWeb.Admin.Controllers
         [HttpGet("detailmodal")]
         public async Task<IActionResult> DetailPartial(string id)
         {
-            var req = await _productService.GetDetailAsync(Convert.ToInt32(id));
+            var req = await _userService.GetAsync(Convert.ToInt32(id));
             return PartialView("_partialDetailUserModal", req.Data);
         }
     }

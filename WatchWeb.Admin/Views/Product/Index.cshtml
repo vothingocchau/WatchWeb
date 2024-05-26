@@ -1,58 +1,175 @@
-﻿@model IEnumerable<WatchWeb.Service.Models.Dto.ProductSimpleDto>
+﻿@model WatchWeb.Service.Models.Response.PaginationProductResponse
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Quản lý danh mục</h6>
+        <a href="user/create" class="btn btn-primary" style="float:right">
+            <span>Thêm mới <i class="fas fa-plus"></i></span>
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            Mã sản phẩm
+                        </th>
+                        <th>
+                            Tên
+                        </th>
+                        <th style="text-align:center">
+                            Trạng thái
+                        </th>
+                        <th>
+                            Hình ảnh
+                        </th>
+                        <th>
+                            Thông tin ngày tạo
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td class="align-middle">
+                                @if (string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="~/img/image-default.png" width="100px" height="100px" />
+                                }
+                                else
+                                {
+                                    <img src=" @item.ImageUrl" width="100px" height="100px" />
+                                }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Mã sản phẩm
-            </th>
-            <th>
-                Danh mục cha
-            </th>
-            <th>
-                Danh mục con
-            </th>
-            <th>
-                Tên sản phẩm
-            </th>
-            <th>
-                Giá
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-            @*     <td>
-                    @Html.DisplayFor(modelItem => item.CategoryName)
-                </td> *@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnitPrice)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.CreateDate) -
+                                @Html.DisplayFor(modelItem => item.CreateUser)
+                            </td>
+                            <td class="align-middle">
+                                <div style="d-flex">
+                                    <button class="btn btn-info launchDetailModal" data-id="@item.Id">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a href="@Url.Action("update","user", new { id = item.Id })" class="btn btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @if (item.Status == 1)
+                                    {
+                                        <button type="button" data-id="@item.Id" data-status="@item.Status" data-action="active" data-controller="category" class="btn btn-danger launchActiveModal" data-bs-toggle="modal" data-bs-target="#myModal">
+                                            <i class="fas fa-lock"></i>
+                                        </button>
+
+                                    }
+                                    else
+                                    {
+                                        <button type="button" data-id="@item.Id" data-status="@item.Status" data-action="active" data-controller="category" class="btn btn-success launchActiveModal" data-bs-toggle="modal" data-bs-target="#myModal">
+                                            <i class="fas fa-unlock"></i>
+                                        </button>
+                                    }
+                                    <button type="button" data-id="@item.Id" data-name="@item.Name" class="btn btn-danger launchDeleteModal">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation" style="float: right;">
+                <ul class="pagination">
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                    {
+                        <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" href="?pageIndex=@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+            <div id="modalContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Open modal when the page is loaded
+        $('.launchActiveModal').click(function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+
+            $.ajax({
+                url: '/' + "user" + '/' + "activemodal",
+                type: 'GET',
+                data: { id: id, status: status },
+                success: function (data) {
+                    $('#modalContainer').html(data);
+                    $('#myModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", xhr.status, xhr.statusText);
+                    console.error("Error message:", error);
+                }
+            });
+        });
+
+        $('.launchDeleteModal').click(function () {
+            var id = $(this).data('id');
+
+            $.ajax({
+                url: '/' + "user" + '/' + "deletemodal",
+                type: 'GET',
+                data: { id: id },
+                success: function (data) {
+                    $('#modalContainer').html(data);
+                    $('#myModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", xhr.status, xhr.statusText);
+                    console.error("Error message:", error);
+                }
+            });
+        });
+
+        $('.launchDetailModal').click(function () {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+
+            $.ajax({
+                url: '/' + "user" + '/' + "detailmodal",
+                type: 'GET',
+                data: { id: id, name: name },
+                success: function (data) {
+                    $('#modalContainer').html(data);
+                    $('#myModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", xhr.status, xhr.statusText);
+                    console.error("Error message:", error);
+                }
+            });
+        });
+    });
+
+
+</script>
+
+
+

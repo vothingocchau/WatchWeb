@@ -27,7 +27,7 @@ namespace WatchWeb.Service.Services
             try
             {
                 var user = await _dataContext.UserAccount.Include(z => z.UserRole)
-                                       .Where(x => x.Name == model.UserName && x.Active &&
+                                       .Where(x => x.UserName == model.UserName && x.Active &&
                                                x.Password == GetMD5(model.Password)).FirstOrDefaultAsync();
 
                 var output = _mapper.Map<AdminLoginDto>(user);

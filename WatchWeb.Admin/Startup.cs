@@ -56,6 +56,7 @@ namespace WatchWeb.Admin
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUploadService, UploadService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,7 +86,7 @@ namespace WatchWeb.Admin
             });
             //app.UseMvc();
             //app.UseAuthorization();
-            
+
         }
     }
 }

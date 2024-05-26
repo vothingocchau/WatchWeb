@@ -1,6 +1,6 @@
 ﻿@{
     var id = ViewData["id"] as string;
-    var status = ViewData["status"] as string;
+    var name = ViewData["name"] as string;
     var action = ViewData["action"] as string;
     var controller = ViewData["controller"] as string;
 }
@@ -9,21 +9,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
-                    Bạn có chắc @if (Convert.ToInt32(@status) == 1)
-                    {
-                        <span>Ngưng Hoạt Động </span>
-                    }
-                    else
-                    {
-                        <span>Mở Hoạt Động </span>
-                    }
+                    Bạn có chắc xóa Danh Mục :@name
                 </h5>
             </div>
             <div class="modal-body">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary closeModal" data-bs-dismiss="launchModal">Đóng</button>
-                <button class="btn btn-primary confirm-active" data-id="@Convert.ToInt32(@id)">Xác nhận</button>
+                <button class="btn btn-primary confirm-delete" data-id="@Convert.ToInt32(@id)">Xác nhận</button>
             </div>
         </div>
     </div>
@@ -36,17 +29,17 @@
             $('#myModal').modal('hide');
         });
 
-        $('.confirm-active').click(function () {
+
+        $('.confirm-delete').click(function () {
             var id = $(this).data('id');
-            activeCategoryById(id);
+            deletCategoryById(id);
         });
 
     });
 
-
-    function activeCategoryById(id) {
+    function deletCategoryById(id) {
         $.ajax({
-            url: 'category/active',
+            url: 'category/delete',
             type: 'POST',
             dataType: 'json',
             data: { id: id },

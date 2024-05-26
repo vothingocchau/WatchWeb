@@ -1,0 +1,74 @@
+﻿@model WatchWeb.Service.Models.Dto.UserDetailDto
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Thông tin chi tiết người dùng
+                </h5>
+            </div>
+            <div class="modal-body d-flex">
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label asp-for="Id" class="control-label">Mã người dùng: @Model.Id</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Tên người dùng: @Model.Name</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Email: @Model.Email</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Số điện thoại: @Model.Phone</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Loại tài khoản: @Model.TypeAccount</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Giới tính: @Model.Gender</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Active" class="control-label">
+                                Trạng thái: @if (Model.Active)
+                                {
+                                    <span>Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span>Ngưng hoạt động</span>
+                                }
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div style="margin: -11px 24px 24px 24px;">
+                    <img id="previewImage" class="img-thumbnail" src="@Model.ImageUrl" asp-append-version="true" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: block;" />                
+                </div>
+                <div style="margin: -11px 24px 24px 24px;">
+                    <label class="control-label">Quyền:</label>
+                    <ul class="list-group">
+                        @foreach (var item in Model.Roles)
+                        {
+                            <li class="list-group-item">
+                                <label class="control-lable">@item</label>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeModal" data-bs-dismiss="launchModal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.closeModal').click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>
