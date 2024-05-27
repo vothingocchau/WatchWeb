@@ -1,0 +1,122 @@
+﻿@using WatchWeb.Service.Models.Request.Products
+@model CreateProductRequest
+
+@{
+    ViewData["Title"] = "Tạo sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Tạo danh mục mới</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="create" asp-controller="product" method="post" enctype="multipart/form-data">
+            <div class="d-flex">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div style="flex:1; padding-right:65px">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">Tên sản phẩm</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="UnitPrice" class="control-label">Gía sản phẩm</label>
+                        <input asp-for="UnitPrice" class="form-control" type="number" />
+                        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MadeIn" class="control-label">Xuất xứ</label>
+                        <input asp-for="MadeIn" class="form-control" />
+                        <span asp-validation-for="MadeIn" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label">Mô tả</label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Diameter" class="control-label">Đường kính</label>
+                        <input asp-for="Diameter" class="form-control" type="number" />
+                        <span asp-validation-for="Diameter" class="text-danger"></span>
+                    </div>
+                </div>
+                <div style="flex:1; padding-right:65px">
+                    <label class="control-label">Danh mục sản phẩm (Chọn nhiều)</label>
+                    <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
+                        @foreach (var item in Model.Categories)
+                        {
+                            <div>
+                                <input type="checkbox" name="CategoryId" value="@item.Id"
+                                @(Model.CategoryId != null && Model.CategoryId.Contains(item.Id) ? "checked" : "") />
+                                <label>@item.Name</label>
+                            </div>
+                        }
+                    </div>
+                    <label class="control-label">Thông tin khác</label>
+                    <div class="form-group">
+                        <select class="custom-select" asp-for="Crystal" asp-items="@(new SelectList (Model.Crystals, "Id", "Name"))">
+                            <option value="">-- Mặt kính --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="custom-select" asp-for="WaterProof" asp-items="@(new SelectList (Model.WaterProofs, "Id", "Name"))">
+                            <option value="">-- Chống nước --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="custom-select" asp-for="Machine" asp-items="@(new SelectList (Model.Machines, "Id", "Name"))">
+                            <option value="">-- Loại máy --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="custom-select" asp-for="Albert" asp-items="@(new SelectList (Model.Alberts, "Id", "Name"))">
+                            <option value="">-- Chất liệu dây --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="custom-select" asp-for="Status" asp-items="@(new SelectList (Model.ProductStatus, "Id", "DislayName"))">
+                            <option value="">-- Trạng Thái --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:1">
+                    <label for="imageInput">Choose Image:</label>
+                    <input type="file" class="form-control-file" id="imageInput" name="image" accept="image/*">
+                    <img id="previewImage" src="#" style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px;" />
+                </div>
+            </div>         
+            <div class="form-group" style="float:right;">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Quay lại danh sách</a>
+</div>
+<script src="~/vendor/jquery/jquery.min.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="~/js/sb-admin-2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#imageInput').change(function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+    });
+    var message = '@ViewData["result"]';
+    if (message) {
+        toastr.error(message, 'Thông báo', { positionClass: 'toast-top-right' });
+    }
+</script>

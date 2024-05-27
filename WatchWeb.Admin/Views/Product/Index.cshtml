@@ -8,7 +8,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Quản lý danh mục</h6>
-        <a href="user/create" class="btn btn-primary" style="float:right">
+        <a href="product/create" class="btn btn-primary" style="float:right">
             <span>Thêm mới <i class="fas fa-plus"></i></span>
         </a>
     </div>
@@ -68,7 +68,7 @@
                                     <button class="btn btn-info launchDetailModal" data-id="@item.Id">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <a href="@Url.Action("update","user", new { id = item.Id })" class="btn btn-warning">
+                                    <a href="@Url.Action("update","product", new { id = item.Id })" class="btn btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @if (item.Status == 1)
@@ -116,7 +116,7 @@
             var status = $(this).data('status');
 
             $.ajax({
-                url: '/' + "user" + '/' + "activemodal",
+                url: '/' + "product" + '/' + "activemodal",
                 type: 'GET',
                 data: { id: id, status: status },
                 success: function (data) {
@@ -134,7 +134,7 @@
             var id = $(this).data('id');
 
             $.ajax({
-                url: '/' + "user" + '/' + "deletemodal",
+                url: '/' + "product" + '/' + "deletemodal",
                 type: 'GET',
                 data: { id: id },
                 success: function (data) {
@@ -153,7 +153,7 @@
             var name = $(this).data('name');
 
             $.ajax({
-                url: '/' + "user" + '/' + "detailmodal",
+                url: '/' + "product" + '/' + "detailmodal",
                 type: 'GET',
                 data: { id: id, name: name },
                 success: function (data) {

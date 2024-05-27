@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WatchWeb.Common.Constant;
 using WatchWeb.Common.Helper;
+using WatchWeb.Model.Entities;
 using WatchWeb.Service.IServices;
 using WatchWeb.Service.Models.Request;
 using WatchWeb.Service.Models.Request.Products;
@@ -40,6 +41,8 @@ namespace WatchWeb.Admin.Controllers
             {
                 if (image != null && image.Length > 0)
                     request.ImageUrl = ImageHelper.ConvertImageToBase64(image);
+                request.CreateDate = DateTime.UtcNow;
+                request.CreateUser = Convert.ToInt32(HttpContext.User.FindFirst(SeasionConstant.USER_ID)?.Value);
                 var result = await _productService.CreateAsync(request);
                 result.Data.Categories = await _categoryService.GetListForCreateUpdateProduct();
                 ViewData[ViewDataConstant.RESULT] = result.Message;
@@ -118,7 +121,7 @@ namespace WatchWeb.Admin.Controllers
             ViewData["status"] = status;
             ViewData["action"] = "active";
             ViewData["controller"] = "category";
-            return PartialView("_parttialActiveUserModal");
+            return PartialView("_parttialActiveProductModal");
         }
 
 
@@ -129,14 +132,14 @@ namespace WatchWeb.Admin.Controllers
             ViewData["name"] = name;
             ViewData["action"] = "delete";
             ViewData["controller"] = "category";
-            return PartialView("_partialDeleteUserModal");
+            return PartialView("_partialDeleteProductModal");
         }
 
         [HttpGet("detailmodal")]
         public async Task<IActionResult> DetailPartial(string id)
         {
             var req = await _productService.GetDetailAsync(Convert.ToInt32(id));
-            return PartialView("_partialDetailUserModal", req.Data);
+            return PartialView("_partialDetailProductModal", req.Data);
         }
     }
 }

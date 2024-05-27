@@ -78,8 +78,17 @@ namespace WatchWeb.Service.Services
 
         public async Task<List<CategorySimpleDto>> GetListForCreateUpdateProduct()
         {
-            var output = await _dataContext.Category.Where(x => !x.IsDeleted).ToListAsync();
-            return _mapper.Map<List<CategorySimpleDto>>(output);
+            try
+            {
+                var output = await _dataContext.Category.Where(x => !x.IsDeleted).ToListAsync();
+                return _mapper.Map<List<CategorySimpleDto>>(output);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         public async Task<BaseResponse<UpdateCategoryRequest>> GetDetailForUpdateAsync(int id)
@@ -169,5 +178,29 @@ namespace WatchWeb.Service.Services
 
             return result.Success(MessageResponseConstant.SUCCESSFULLY, string.Empty);
         }
+
+        public async Task<List<CategorySimpleDto>> GetAllForUserAsync()
+        {
+            var query = _dataContext.Category.Where(x => !x.IsDeleted && x.Status == (int)CategoryEnumStatus.ACTIVE);
+
+            var totalCount = await query.CountAsync();
+            var data = await query.ToListAsync();
+            var outputs = data.Where(x=>x.ParentId == null).Select(c => new CategorySimpleDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Status = c.Status,
+                ParentId = c.ParentId,
+                Childrens = GetChildrens(data,c.Id),
+            }).ToList();
+
+            await _uploadService.AppendFileUrls<CategorySimpleDto, DocumentOutputDto>(DocumentTypeConstant.CATEGORY,
+                x => x.Id,
+                (x, files) => x.ImageUrl = files.Select(x => x.Url).FirstOrDefault(),
+                outputs.ToArray());
+
+            return outputs;
+
+		}
     }
 }

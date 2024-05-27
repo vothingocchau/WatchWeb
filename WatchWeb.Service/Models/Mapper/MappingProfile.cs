@@ -2,6 +2,7 @@
 using WatchWeb.Model.Entities;
 using WatchWeb.Service.Models.Dto;
 using WatchWeb.Service.Models.Request.Category;
+using WatchWeb.Service.Models.Request.Products;
 using WatchWeb.Service.Models.Request.Roles;
 using WatchWeb.Service.Models.Request.Users;
 
@@ -33,6 +34,11 @@ namespace WatchWeb.Service.Models.Mapper
             CreateMap<UpdateUserRequest, UserAccount>();
             CreateMap<UserAccount, UpdateUserRequest>();
             CreateMap<Product, ProductSimpleDto>();
+            CreateMap<ProductSimpleDto, Product>();
+            CreateMap<Product, ProductDetailDto>();
+            CreateMap<CreateProductRequest, Product>();
+            CreateMap<UpdateProductRequest, Product>();
+            CreateMap<Product, UpdateProductRequest>();
         }
     }
 }

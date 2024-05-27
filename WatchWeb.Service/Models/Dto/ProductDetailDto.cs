@@ -11,7 +11,7 @@ namespace WatchWeb.Service.Models.Dto
         public int Id { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
-        public float UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
         public int CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
         public string MadeIn { get; set; }

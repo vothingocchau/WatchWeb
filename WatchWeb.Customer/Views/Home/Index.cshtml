@@ -1,5 +1,18 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-
+﻿@model IEnumerable<WatchWeb.Service.Models.Dto.ProductSimpleDto>
+<ul class="thumbnails">
+	@foreach(var item in Model)
+	{
+		<li class="span3">
+			<div class="thumbnail">
+				<a href="product_details.html"><img src="@item.ImageUrl" alt="" /></a>
+				<div class="caption">
+					<h5>@item.Name</h5>
+					<p>
+						Nâng niu bàn tay Việt.
+					</p>
+					<h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Thêm <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">@item.UnitPrice</a></h4>
+				</div>
+			</div>
+		</li>
+	}
+</ul>

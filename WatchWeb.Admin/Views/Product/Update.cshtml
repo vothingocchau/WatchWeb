@@ -1,0 +1,111 @@
+﻿@model WatchWeb.Service.Models.Request.Products.UpdateProductRequest
+
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phma63";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Chỉnh sửa người dùng mới</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="update" asp-controller="product" method="post" class="d-flex" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div style="flex:0.5; padding-right:65px">
+                <div class="form-group">
+                    <label asp-for="Id" class="control-label">Mã danh mục: @Model.Id</label>
+                    <input asp-for="Id" class="form-control" hidden />
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Tên sản phẩm</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UnitPrice" class="control-label">Gía sản phẩm</label>
+                    <input asp-for="UnitPrice" class="form-control" type="number" />
+                    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MadeIn" class="control-label">Xuất xứ</label>
+                    <input asp-for="MadeIn" class="form-control" />
+                    <span asp-validation-for="MadeIn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Mô tả</label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Diameter" class="control-label">Đường kính</label>
+                    <input asp-for="Diameter" class="form-control" type="number" />
+                    <span asp-validation-for="Diameter" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="Crystal" asp-items="@(new SelectList (Model.Crystals, "Id", "Name"))">
+                        <option value="">-- Mặt kính --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="WaterProof" asp-items="@(new SelectList (Model.WaterProofs, "Id", "Name"))">
+                        <option value="">-- Chống nước --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="Machine" asp-items="@(new SelectList (Model.WaterProofs, "Id", "Name"))">
+                        <option value="">-- Loại máy --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="Albert" asp-items="@(new SelectList (Model.Alberts, "Id", "Name"))">
+                        <option value="">-- Chất liệu dây --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="custom-select" asp-for="Status" asp-items="@(new SelectList (Model.ProductStatus, "Id", "DislayName"))">
+                        <option value="">-- Trạng Thái --</option>
+                    </select>
+                </div>
+                <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:335px;">
+                    @foreach (var item in Model.Categories)
+                    {
+                        <div style="width:80px">
+                            <input type="checkbox" name="CategoryId" value="@item.Id"
+                            @(Model.CategoryId != null && Model.CategoryId.Contains(item.Id) ? "checked" : "") />
+                            <label>@item.Name</label>
+                        </div>
+                    }
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Lưu" class="btn btn-primary" />
+                </div>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label for="imageInput">Chọn hình ảnh:</label>
+                <input type="file" class="form-control-file" id="imageInput" name="image" accept="image/*">
+                <img id="previewImage" src="@Model.ImageUrl" asp-append-version="true" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: block;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Quay lại danh sách</a>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#imageInput').change(function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+

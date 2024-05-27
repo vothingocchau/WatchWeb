@@ -7,7 +7,8 @@
         public int CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
         public string ImageUrl { get; set; }
-        public float UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
         public int Status { get; set; }
     }
 }
+    

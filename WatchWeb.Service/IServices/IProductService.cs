@@ -11,9 +11,11 @@ namespace WatchWeb.Service.IServices
         public Task<BaseResponse<CreateProductRequest>> CreateAsync(CreateProductRequest request);
         public Task<BaseResponse<UpdateProductRequest>> UpdateAsync(UpdateProductRequest request);
         public Task<PaginationProductResponse> GetAllAsync(BasePaginationRequest request);
+        public Task<PaginationProductResponse> GetAllForCustomer(BasePaginationRequest request);
         public Task<BaseResponse<ProductDetailDto>> GetDetailAsync(int id);
         public Task<BaseResponse<string>> Active(int id);
         public Task<BaseResponse<string>> Delete(int id);
         public Task<BaseResponse<UpdateProductRequest>> GetDetailForUpdateAsync(int id);
+		public Task<List<ProductSimpleDto>> GetFeatureProduct();
     }
 }
