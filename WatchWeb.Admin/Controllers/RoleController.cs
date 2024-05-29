@@ -27,9 +27,11 @@ namespace WatchWeb.Admin.Controllers
         }
 
         [HttpGet("create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var request = new CreateRoleRequest();
+            request.Permissions = await _roleService.GetAllPermission();
+            return View(request);
         }
 
         [HttpPost("create")]

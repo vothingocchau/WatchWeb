@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<WatchWeb.Service.Models.Dto.CategorySimpleDto>
 <ul id="sideManu" class="nav nav-tabs nav-stacked">
-	@foreach(var item in Model)
-	{
-		<li class="subMenu open">
-			<a>@item.Name</a>
-			<ul>
-				@foreach(var sub in item.Childrens)
-				{
-					<li><a href="products.html"><i class="icon-chevron-right"></i>@sub.Name</a></li>
-				}
-			</ul>
-		</li>
-	}
+    @foreach (var item in Model)
+    {
+        <li class="subMenu">
+            <a href="@Url.Action("search", "product", new { categoryId = item.Id })">@item.Name</a>
+            <ul>
+                @foreach (var sub in item.Childrens)
+                {
+                    <li>
+                        <a href="@Url.Action("search", "product", new { categoryId = sub.Id })"><i class="icon-chevron-right"></i>@sub.Name</a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
 </ul>
+

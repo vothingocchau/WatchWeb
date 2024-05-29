@@ -1,3 +1,4 @@
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WatchWeb.Customer.Models;
@@ -22,22 +23,26 @@ namespace WatchWeb.Customer.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetFeatureProduct();
-			return View(products);
-        }
-
-
-        public async Task<IActionResult> GetAllProduct(BasePaginationRequest request)
-        {
-            var products = await _productService.GetAllForCustomer(request);
-            return View(products);
+            var products = await _productService.GetAllForCustomer(new BasePaginationRequest
+            {
+                PageIndex = 1,
+                PageSize = 12,
+            });
+            return View(products.Data);
         }
 
         [Route("category")]
         public async Task<IActionResult> GetCategory()
         {
-            var products = await _categoryService.GetAllForUserAsync();
-            return PartialView("_partialCategory", products);
+            var category = await _categoryService.GetAllForUserAsync();
+            return PartialView("_partialCategory", category);
+        }
+
+        [Route("feature-product")]
+        public async Task<IActionResult> GetFeatures()
+        {
+            var products = await _productService.GetFeatureProduct();
+            return PartialView("_partialFeatureProduct", products);
         }
 
 

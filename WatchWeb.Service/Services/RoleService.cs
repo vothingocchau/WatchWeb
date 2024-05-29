@@ -79,6 +79,13 @@ namespace WatchWeb.Service.Services
             return outputs;
         }
 
+        public async Task<List<PermissionSimpleDto>> GetAllPermission()
+        {
+            var query = _dataContext.Permission.Where(x => x.Status == 1);
+            var outputs = _mapper.Map<List<PermissionSimpleDto>>(await query.ToListAsync());
+            return outputs;
+        }
+
         public async Task<BaseResponse<RoleDetailDto>> GetDetailAsync(int id)
         {
             var query = await _dataContext.Role.Where(x => x.Id == id).FirstOrDefaultAsync();

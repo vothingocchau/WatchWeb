@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WatchWeb.Service.Models.Dto
+﻿namespace WatchWeb.Service.Models.Dto
 {
     public class ProductDetailDto
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }
         public string Name { get; set; }
+        public int Stock { get; set; }
         public decimal UnitPrice { get; set; }
         public int CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

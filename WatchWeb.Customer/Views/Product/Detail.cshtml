@@ -1,0 +1,59 @@
+﻿@model WatchWeb.Service.Models.Dto.ProductDetailDto
+
+<div class="span9">
+    <ul class="breadcrumb">
+        <li><a href="index.html">Trang chủ</a> <span class="divider">/</span></li>
+        <li><a href="products.html">Sản phẩm</a> <span class="divider">/</span></li>
+        <li>Chi tiết sản phẩm <span class="divider">/</span></li>
+        <li class="active">@Model.Name</li>
+    </ul>
+    <div class="row">
+        <div id="gallery" class="span3">
+            <a href="@Model.ImageUrl" title="Fujifilm FinePix S2950 Digital Camera">
+                <img src="@Model.ImageUrl" style="width:100%" alt="Fujifilm FinePix S2950 Digital Camera" />
+            </a>
+        </div>
+        <div class="span6">
+            <h3>@Model.Name  </h3>
+            <hr class="soft" />
+            <form class="form-horizontal qtyFrm">
+                <div class="control-group">
+                    <label class="control-label"><span>@Model.UnitPrice</span></label>
+                    <div class="controls">
+                        <input type="number" class="span1" placeholder="Qty." />
+                        <button type="submit" class="btn btn-large btn-primary pull-right"> Thêm vào giỏ hàng <i class=" icon-shopping-cart"></i></button>
+                    </div>
+                </div>
+            </form>
+
+            <hr class="soft" />
+            <h4>@Model.Stock</h4>
+            <hr class="soft clr" />
+            <p>
+                @Model.Description
+            </p>
+        </div>
+
+        <div class="span9">
+            <ul id="productDetail" class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">Thông tin chi tiết</a>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="home">
+                    <h4>Thông tin sản phẩm</h4>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr class="techSpecRow"><th colspan="2">Thông tin chi tiết</th></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Xuất xứ: </td><td class="techSpecTD2">@Model.MadeIn</td></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Đường kính:</td><td class="techSpecTD2">@Model.Diameter</td></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Mặt kính:</td><td class="techSpecTD2">@Model.Crystal</td></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Chống nước:</td><td class="techSpecTD2"> @Model.WaterProof</td></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Máy:</td><td class="techSpecTD2">@Model.Machine</td></tr>
+                            <tr class="techSpecRow"><td class="techSpecTD1">Dây:</td><td class="techSpecTD2">@Model.Albert</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

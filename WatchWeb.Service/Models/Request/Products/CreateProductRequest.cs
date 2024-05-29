@@ -13,7 +13,7 @@ namespace WatchWeb.Service.Models.Request.Products
         public string Name { get; set; }
         [Range(0, int.MaxValue, ConvertValueInInvariantCulture = true, ErrorMessage = "Vui lòng nhập số dương")]
         [Required(ErrorMessage = "Vui lòng nhập tiền sản phẩm")]
-        public float UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
         public int CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
         public string MadeIn { get; set; }
@@ -24,6 +24,8 @@ namespace WatchWeb.Service.Models.Request.Products
         public string Machine { get; set; }
         public string Albert { get; set; }
         public int Status { get; set; }
+        [Range(0,int.MaxValue)]
+        public int Stock { get; set; }
 
 
         [NotMapped]

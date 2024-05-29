@@ -1,0 +1,59 @@
+﻿@model WatchWeb.Service.Models.Response.PaginationProductResponse
+
+<form class="form-horizontal span6" action="@Url.Action("search", "product")" method="get" style="display:flex;align-items:center;justify-content:space-between">
+    <div>
+        <label for="minPrice">Từ giá:</label>
+        <input type="range" id="minPrice" name="minPrice" min="100000" max="100000000" value="100000">
+        <span id="minPriceValue">100,000</span> VNĐ
+        <br>
+    </div>
+    <div>
+        <label for="maxPrice">Đến giá:</label>
+        <input type="range" id="maxPrice" name="maxPrice" min="100000" max="100000000" value="500000">
+        <span id="maxPriceValue">500,000</span> VNĐ
+        <br>
+    </div>
+    <input type="submit" value="Tìm kiếm">
+</form>
+<br class="clr" />
+<div class="tab-content">
+    <div class="tab-pane  active" id="blockView">
+
+        <ul class="thumbnails">
+            @foreach (var item in Model.Data)
+            {
+                <li class="span3">
+                    <div class="thumbnail">
+                        <a href="@Url.Action("detail", "product", new{id =item.Id})"><img src="@item.ImageUrl" alt="" /></a>
+                        <div class="caption">
+                            <h5>@item.Name</h5>
+                            <h4 style="text-align:center"><a class="btn" href="@Url.Action("detail", "product", new{id =item.Id})"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Thêm  <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">@item.UnitPrice</a></h4>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+    var minPrice = document.getElementById('minPrice');
+    var maxPrice = document.getElementById('maxPrice');
+    var minPriceValue = document.getElementById('minPriceValue');
+    var maxPriceValue = document.getElementById('maxPriceValue');
+
+    minPrice.addEventListener('input', function () {
+        var formattedValue = numberWithCommas(this.value);
+        minPriceValue.textContent = formattedValue;
+    });
+
+    maxPrice.addEventListener('input', function () {
+        var formattedValue = numberWithCommas(this.value);
+        maxPriceValue.textContent = formattedValue;
+    });
+
+    // Function để định dạng số với dấu phẩy phân tách hàng nghìn
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+</script>

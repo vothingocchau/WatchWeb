@@ -65,12 +65,15 @@ namespace WatchWeb.Admin.Controllers
 
         [HttpPost("update")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(UpdateProductRequest request, IFormFile image)
+        public async Task<IActionResult> Update(UpdateProductRequest request)
         {
             if (ModelState.IsValid)
             {
-                if (image != null && image.Length > 0)
+                if (Request.Form.Files.Count > 0 && Request.Form.Files[0].Length > 0)
+                {
+                    var image = Request.Form.Files[0];
                     request.ImageUrl = ImageHelper.ConvertImageToBase64(image);
+                }
                 var result = await _productService.UpdateAsync(request);
                 result.Data.Categories = await _categoryService.GetListForCreateUpdateProduct();
                 ViewData[ViewDataConstant.RESULT] = result.Message;

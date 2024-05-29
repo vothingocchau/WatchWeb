@@ -39,6 +39,7 @@ namespace WatchWeb.Service.Models.Mapper
             CreateMap<CreateProductRequest, Product>();
             CreateMap<UpdateProductRequest, Product>();
             CreateMap<Product, UpdateProductRequest>();
+            CreateMap<Permission, PermissionSimpleDto>();
         }
     }
 }

@@ -17,5 +17,6 @@ namespace WatchWeb.Service.IServices
         public Task<BaseResponse<string>> Delete(int id);
         public Task<BaseResponse<UpdateProductRequest>> GetDetailForUpdateAsync(int id);
 		public Task<List<ProductSimpleDto>> GetFeatureProduct();
+        public Task<ProductDetailDto> GetDetailForUserAsync(int id);
     }
 }

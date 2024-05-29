@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var display = "Admin";
+    var oldDisplay = string.Empty;
 }
 
 <h1>Create</h1>
@@ -10,18 +12,60 @@
 <h4>CreateRoleRequest</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
+            <div class="d-flex">
+                <div style="flex:0.5; padding-right:65px">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <input asp-for="Status" class="form-control" />
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <div style="flex:1; padding-right:65px">
+                    @foreach (var item in Model.Permissions)
+                    {
+                        @if (oldDisplay != display)
+                        {
+                            <label class="control-label">@display</label>
+                            <br />
+                            oldDisplay = display;
+                        }
+                        <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
+                            @{
+                                int dotIndex = item.Name.IndexOf('.');
+                            }
+                            @if (item.DisplayName == display)
+                            {
+                            <div style="width:150px">
+                                <input type="checkbox" name="Permission" value="@item.Id"
+                                @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
+                                <label>@item.Name.Substring(dotIndex + 1)</label>
+                            </div>
+                            }
+                            else
+                            {
+                                display = item.DisplayName;
+                                dotIndex = item.Name.IndexOf('.');
+                            }
+                            <br />
+                            <div style="width:150px">
+                                <input type="checkbox" name="Permission" value="@item.Id"
+                                @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
+                                <label>@item.Name.Substring(dotIndex + 1)</label>
+                            </div>
+                            @{
+                                display = item.DisplayName;
+                            }
+                        </div>
+                    }
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

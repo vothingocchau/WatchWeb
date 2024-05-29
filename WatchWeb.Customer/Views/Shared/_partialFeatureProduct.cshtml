@@ -1,0 +1,19 @@
+﻿@model IEnumerable<WatchWeb.Service.Models.Dto.ProductSimpleDto>
+
+<div class="item active">
+    <ul class="thumbnails">
+        @foreach (var item in Model)
+        {
+            <li class="span4">
+                <div class="thumbnail">
+                    <i class="tag"></i>
+                    <a href="product/detail/@item.Id"><img src="@item.ImageUrl" alt=""></a>
+                    <div class="caption">
+                        <h5>@item.Name</h5>
+                        <h4 style="text-align:center"><a class="btn" href="product/detail/@item.Id">Xem Chi Tiết</a> <span class="pull-right">@item.UnitPrice</span></h4>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

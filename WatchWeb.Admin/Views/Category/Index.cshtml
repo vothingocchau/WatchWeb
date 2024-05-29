@@ -71,7 +71,7 @@
                                 }
                                 else
                                 {
-                                    <img src=" @item.ImageUrl" width="100px" height="100px" />
+                                    <img src="@item.ImageUrl" width="100px" height="100px" />
                                 }
 
                             </td>
@@ -170,6 +170,7 @@
                 type: 'GET',
                 data: { id: id, name: name },
                 success: function (data) {
+                    console.log(data);
                     $('#modalContainer').html(data);
                     $('#myModal').modal('show');
                 },
