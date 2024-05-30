@@ -27,19 +27,28 @@ namespace WatchWeb.Service.Services
 
         public async Task<BaseResponse<string>> CreateAsync(CreateRoleRequest request)
         {
-            var entity = _mapper.Map<Role>(request);
-            await _dataContext.Role.AddAsync(entity);
-
-            if (request.Permission.Any())
+            try
             {
-                foreach (var permissionId in request.Permission)
-                {
-                    _dataContext.RolePermission.Add(new RolePermission { RoleId = entity.Id, PermissionId = permissionId });
-                }
-            }
+                var entity = _mapper.Map<Role>(request);
+                await _dataContext.Role.AddAsync(entity);
+                await _dataContext.SaveChangesAsync();
 
-            await _dataContext.SaveChangesAsync();
-            return new BaseResponse<string>().Success(MessageResponseConstant.SUCCESSFULLY, string.Empty);
+                if (request.Permission.Any())
+                {
+                    foreach (var permissionId in request.Permission)
+                    {
+                        _dataContext.RolePermission.Add(new RolePermission { RoleId = entity.Id, PermissionId = permissionId });
+                    }
+                }
+
+                await _dataContext.SaveChangesAsync();
+                return new BaseResponse<string>().Success(MessageResponseConstant.SUCCESSFULLY, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+           
         }
 
         public async Task<BaseResponse<PageResponse<List<RoleSimpleDto>>>> GetAllAsync(BasePaginationRequest request)

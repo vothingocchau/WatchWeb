@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
+using WatchWeb.Common.Constant;
 using WatchWeb.Service.IServices;
 using WatchWeb.Service.Models.Request;
 using WatchWeb.Service.Models.Request.Roles;
+using WatchWeb.Service.Services;
 
 namespace WatchWeb.Admin.Controllers
 {
@@ -18,7 +21,6 @@ namespace WatchWeb.Admin.Controllers
             _mapper = mapper;
         
         }
-
 
         public async Task<IActionResult> Index(BasePaginationRequest request)
         {
@@ -37,8 +39,13 @@ namespace WatchWeb.Admin.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateRoleRequest request)
         {
-
-            return LocalRedirect("/role");
+            var result = await _roleService.CreateAsync(request);
+            ViewData[ViewDataConstant.RESULT] = result.Message;
+            if (result.IsSuccess)
+            {
+                return LocalRedirect("/role");
+            }
+            return View();
         }
 
 
@@ -47,19 +54,35 @@ namespace WatchWeb.Admin.Controllers
         {
             var roleDetail = await _roleService.GetDetailAsync(id);
             var output = _mapper.Map<UpdateRoleRequest>(roleDetail.Data);
+            output.Permissions = await _roleService.GetAllPermission();
             return View(output);
         }
 
         [HttpPost("update")]
         public async Task<IActionResult> Update(UpdateRoleRequest request)
         {
-            return LocalRedirect("/role");
+            var result = await _roleService.UpdateAsync(request);
+            ViewData[ViewDataConstant.RESULT] = result.Message;
+            if (result.IsSuccess)
+            {
+                return LocalRedirect("/role");
+            }
+            return View();
         }
 
         [HttpGet("detail")]
         public async Task<IActionResult> GetDetail(int id)
         {
-            return View();
+            var roleDetail = await _roleService.GetDetailAsync(id);
+            return View(roleDetail.Data);
+        }
+
+        [HttpGet("detailmodal")]
+        public async Task<IActionResult> DetailPartial(string id)
+        {
+            var roleDetail = await _roleService.GetDetailAsync(Convert.ToInt32(id));
+            roleDetail.Data.Permissions = await _roleService.GetAllPermission();
+            return PartialView("_partialDetailPermissionModal", roleDetail.Data);
         }
     }
 }

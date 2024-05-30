@@ -3,13 +3,10 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var display = "Admin";
-    var oldDisplay = string.Empty;
+    var display = string.Empty;
 }
 
-<h1>Create</h1>
-
-<h4>CreateRoleRequest</h4>
+<h4>Thêm mới quyền</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -29,52 +26,39 @@
                     </div>
                 </div>
                 <div style="flex:1; padding-right:65px">
-                    @foreach (var item in Model.Permissions)
+                    @foreach (var name in Model.Permissions)
                     {
-                        @if (oldDisplay != display)
+                        @if (display != name.DisplayName)
                         {
-                            <label class="control-label">@display</label>
+                            <label class="control-label">@name.DisplayName</label>
                             <br />
-                            oldDisplay = display;
+                            display = name.DisplayName;
+                            <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
+                                @foreach (var item in Model.Permissions)
+                                {
+                                    if (display == item.DisplayName)
+                                    {
+                                        int dotIndex = item.Name.IndexOf('.');
+                                        <div style="width:150px">
+                                            <input type="checkbox" name="Permission" value="@item.Id"
+                                            @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
+                                            <label>@item.Name.Substring(dotIndex + 1)</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
                         }
-                        <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
-                            @{
-                                int dotIndex = item.Name.IndexOf('.');
-                            }
-                            @if (item.DisplayName == display)
-                            {
-                            <div style="width:150px">
-                                <input type="checkbox" name="Permission" value="@item.Id"
-                                @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
-                                <label>@item.Name.Substring(dotIndex + 1)</label>
-                            </div>
-                            }
-                            else
-                            {
-                                display = item.DisplayName;
-                                dotIndex = item.Name.IndexOf('.');
-                            }
-                            <br />
-                            <div style="width:150px">
-                                <input type="checkbox" name="Permission" value="@item.Id"
-                                @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
-                                <label>@item.Name.Substring(dotIndex + 1)</label>
-                            </div>
-                            @{
-                                display = item.DisplayName;
-                            }
-                        </div>
                     }
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group" style="float:right">
+                <input type="submit" value="Tạo" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Quay về danh sách</a>
 </div>
 

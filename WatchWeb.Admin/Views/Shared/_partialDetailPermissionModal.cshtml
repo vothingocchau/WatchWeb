@@ -1,0 +1,77 @@
+﻿@model WatchWeb.Service.Models.Dto.RoleDetailDto
+@{
+    var display = string.Empty;
+}
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Thông tin chi tiết sản phẩm
+                </h5>
+            </div>
+            <div class="modal-body d-flex">
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label asp-for="Id" class="control-label">Mã quyền: @Model.Id</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Name" class="control-label">Tên quyền: @Model.Name</label>
+                        </li>
+                        <li class="list-group-item">
+                            <label asp-for="Status" class="control-label">
+                                Trạng thái: @if (Model.Status == 1)
+                                {
+                                    <span>Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span>Ngưng hoạt động</span>
+                                }
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div style="margin: -11px 24px 24px 24px;">
+                    <h4>Quyền:</h4>
+                    @foreach (var name in Model.Permissions)
+                    {
+                        @if (display != name.DisplayName)
+                        {
+                            <label class="control-label">@name.DisplayName</label>
+                            <br />
+                            display = name.DisplayName;
+                            <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
+                                @foreach (var item in Model.Permissions)
+                                {
+                                    if (display == item.DisplayName)
+                                    {
+                                        int dotIndex = item.Name.IndexOf('.');
+                                        <div style="width:150px">
+                                            <input type="checkbox" name="Permission" value="@item.Id"
+                                            @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "")  disabled/>
+                                            <label>@item.Name.Substring(dotIndex + 1)</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary closeModal" data-bs-dismiss="launchModal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.closeModal').click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+</script>

@@ -3,34 +3,67 @@
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var display = string.Empty;
 }
 
-<h1>Update</h1>
-
-<h4>UpdateRoleRequest</h4>
+<h4>Chỉnh sửa quyền</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Update">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="d-flex">
+                <div style="flex:0.5; padding-right:65px">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Id" class="control-label">Mã quyền: @Model.Id</label>
+                        <input asp-for="Id" class="form-control" hidden />
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <input asp-for="Status" class="form-control" />
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <div style="flex:1; padding-right:65px">
+                    @foreach (var name in Model.Permissions)
+                    {
+                        @if (display != name.DisplayName)
+                        {
+                            <label class="control-label">@name.DisplayName</label>
+                            <br />
+                            display = name.DisplayName;
+                            <div class="form-group d-flex flex-lg-wrap" style="justify-content:space-between;align-items:center;width:100%;">
+                                @foreach (var item in Model.Permissions)
+                                {
+                                    if (display == item.DisplayName)
+                                    {
+                                        int dotIndex = item.Name.IndexOf('.');
+                                        <div style="width:150px">
+                                            <input type="checkbox" name="Permission" value="@item.Id"
+                                            @(Model.Permission != null && Model.Permission.Contains(item.Id) ? "checked" : "") />
+                                            <label>@item.Name.Substring(dotIndex + 1)</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="form-group" style="float:right">
+                    <input type="submit" value="Chỉnh sửa" class="btn btn-primary" />
+                </div>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Quay về danh sách</a>
 </div>
 
